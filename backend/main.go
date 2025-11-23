@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
@@ -56,6 +57,11 @@ func main() {
 		authorized.GET("/orders", orderHandler.ListOrders)
 	}
 
-	log.Println("Server starting on :8080")
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	
+	log.Println("Server starting on :" + port)
+	r.Run(":" + port)
 }
