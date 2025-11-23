@@ -3,17 +3,29 @@ import './Login.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
-function Login({ onLogin, onShowSignup }) {
+function Signup({ onSignupSuccess, onBackToLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      window.alert('Passwords do not match!');
+      return;
+    }
+
+    if (password.length < 6) {
+      window.alert('Password must be at least 6 characters long');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/users/login`, {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,12 +36,13 @@ function Login({ onLogin, onShowSignup }) {
       const data = await response.json();
 
       if (response.ok) {
-        onLogin(data.token);
+        window.alert('Account created successfully! Please login.');
+        onSignupSuccess();
       } else {
-        window.alert('Invalid username/password');
+        window.alert(data.error || 'Username already exists');
       }
     } catch (error) {
-      window.alert('Invalid username/password');
+      window.alert('Failed to create account. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -39,7 +52,7 @@ function Login({ onLogin, onShowSignup }) {
     <div className="login-container">
       <div className="login-box">
         <h1>E-Commerce Store</h1>
-        <h2>Login</h2>
+        <h2>Create Account</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Username</label>
@@ -48,7 +61,8 @@ function Login({ onLogin, onShowSignup }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Enter username"
+              placeholder="Choose a username"
+              minLength="3"
             />
           </div>
           <div className="form-group">
@@ -58,21 +72,30 @@ function Login({ onLogin, onShowSignup }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter password"
+              placeholder="Choose a password"
+              minLength="6"
+            />
+          </div>
+          <div className="form-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="Confirm your password"
+              minLength="6"
             />
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
           <button 
             type="button" 
-            onClick={onShowSignup}
-            style={{ 
-              marginTop: '10px', 
-              background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' 
-            }}
+            onClick={onBackToLogin}
+            style={{ marginTop: '10px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
           >
-            Create New Account
+            Back to Login
           </button>
         </form>
       </div>
@@ -80,4 +103,4 @@ function Login({ onLogin, onShowSignup }) {
   );
 }
 
-export default Login;
+export default Signup;
