@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const API_URL = 'http://localhost:8080';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');

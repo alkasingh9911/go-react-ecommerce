@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ItemsList.css';
 
-const API_URL = 'http://localhost:8080';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 function ItemsList({ token, onLogout }) {
   const [items, setItems] = useState([]);
