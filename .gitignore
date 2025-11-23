@@ -1,6 +1,5 @@
 # Backend
 backend/ecommerce.db
-backend/go.sum
 
 # Frontend
 frontend/node_modules/
